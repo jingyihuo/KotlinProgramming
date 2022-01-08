@@ -1,23 +1,28 @@
 fun main() {
-    // shorthand
-    runSimulation("Jenny", ::printConstructionCost) {
-        playerName, numBuildings ->
-        println("Adding $numBuildings house!")
-        val currentYear = 2018
-        "Welcome to SimVillage, $playerName! (copyright: $currentYear)"
-    }
+    runSimulation()
 }
 
 // not very clear with the inline keyword
-inline fun runSimulation(playerName : String,
-                         costPrinter : (Int) -> Unit,
-                         greetingsFunction: (String, Int) -> String) {
-    val numBuildings = (1..3).random()
-    costPrinter(numBuildings)
-    println(greetingsFunction(playerName, numBuildings))
+fun runSimulation() {
+    val greetingsFunction = configureGreetingFunctions()
+    print(greetingsFunction("Jenny"))
 }
 
 fun printConstructionCost(numBuildings : Int) {
     val cost = 500
     println("construction cost : ${numBuildings * cost}")
+}
+
+// input: no arguments
+// output: function (input String, output String)
+fun configureGreetingFunctions() : (String) -> String {
+    val constructionType = "hospital"
+    var numBuildings = (1..5).random()
+    return {
+        playerName : String ->
+        val currentYear = 2022
+        numBuildings += 1
+        println("Adding $numBuildings $constructionType!")
+        "Welcome to SimVillage, $playerName! (copyright: $currentYear)"
+    }
 }
