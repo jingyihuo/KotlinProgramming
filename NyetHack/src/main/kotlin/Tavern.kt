@@ -4,8 +4,6 @@ import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
 
-var playerGold = 10
-var playerSilver = 10
 //val patronList: List<String> = listOf("Eli", "Mordoc", "Sophie")
 val patronList = mutableListOf("Eli", "Mordoc", "Sophie")
 // set
@@ -13,29 +11,44 @@ val lastName = listOf("Ironfoot", "Fernsworth", "Baggins")
 val uniquePatrons = mutableSetOf<String>()
 // read file into a list
 val menuList = File("data/tavern-menu-data.txt").readText().split("\n")
+// map
+val patronGold = mutableMapOf<String, Double>()
 
 fun main() {
 
+    // display the menu
     displayTavernMenu()
 
-    // checkPatrons()
+    // Check whether a specific patron is here or already leaving
+    checkPatronsHere()
 
-    // createUniquePatrons()
+    createUniquePatrons()
 
-    // printAllOrders()
+    // Gold
+    uniquePatrons.forEach { patronGold[it] = 6.0 }
+
+    printAllOrders()
+
+
 }
 
 private fun printAllOrders() {
     // while loop
     var orderCount = 0
-    while (orderCount <= 9) {
+    while (orderCount <= 5) {
         placeOrder(uniquePatrons.shuffled().first(), menuList.shuffled().first())
         orderCount++
     }
+
+    displayPatronBalances()
+}
+
+private fun displayPatronBalances() {
+    patronGold.forEach { (name, gold) -> println("$name,balance: ${"%.2f".format(gold)}") }
 }
 
 private fun createUniquePatrons() {
-    (0..9).forEach {
+    (0..5).forEach {
         val first = patronList.shuffled().first()
         val last = lastName.shuffled().first()
         val name = "$first $last"
@@ -44,7 +57,7 @@ private fun createUniquePatrons() {
     println(uniquePatrons)
 }
 
-private fun checkPatrons() {
+private fun checkPatronsHere() {
     // list contains single item?
     if (patronList.contains("Eli")) {
         println("The tavern master says: Eli's in the back playing cards")
@@ -64,16 +77,20 @@ private fun checkPatrons() {
 
 
 fun placeOrder(patronName: String, menuData : String) {
+    // build the scene
     val indexOfApostrophe = TAVERN_NAME.indexOf('\'')
     val tavernMaster = TAVERN_NAME.substring(0 until indexOfApostrophe)
     println("$patronName speaks with $tavernMaster about their orders.")
 
+    // Get data from menu
     val (type, name, price) = menuData.split(',')
     val message = "$patronName buys a $name ($type) for $price"
     println(message)
 
-    performPurchase(price.toDouble())
+    // purchase
+    performPurchase(patronName, price.toDouble())
 
+    // result
     val phrase = if (name == "Dragon's Breath") {
         "$patronName exclaims: ${toDragonSpeak("Ah, delicious $name")}!"
     } else {
@@ -81,6 +98,11 @@ fun placeOrder(patronName: String, menuData : String) {
     }
     println(phrase)
     println()
+}
+
+private fun performPurchase(patronName:String, price: Double) {
+    val totalPurse = patronGold.getValue(patronName)
+    patronGold[patronName] = totalPurse - price
 }
 
 private fun toDragonSpeak(phrase : String) : String =
@@ -95,34 +117,12 @@ private fun toDragonSpeak(phrase : String) : String =
         }
     }
 
-private fun performPurchase(price : Double) {
-    displayBalance()
-    val totalPurse = playerGold + (playerSilver / 100.0)
-    println("Total Purse: $totalPurse")
-    println("Purchasing item for $price")
-
-    // subtracting
-    val remainingBalance = totalPurse - price
-    println("Remaining Balance: ${"%.2f".format(remainingBalance)}")
-
-    // convert double to Int
-    val remainingGold = remainingBalance.toInt()
-    val remainingSilver = (remainingBalance % 1 * 100).roundToInt()
-    playerSilver = remainingGold
-    playerSilver = remainingSilver
-    displayBalance()
-}
-
-private fun displayBalance() {
-    println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
-}
-
 // Challenge 1
 fun displayTavernMenu() {
     var maxLength = menuList.maxOf { it.length }
     val banner = "Welcome to Taernyl's Folly"
     maxLength = max(maxLength, banner.length)
-    println(maxLength)
+    // println(maxLength)
 
     val total = maxLength + 10
 
@@ -146,7 +146,7 @@ fun displayTavernMenu() {
             println()
         }
     }
-
+    println()
 }
 
 fun printMultipleSignal(signal : String, number : Int) {
@@ -155,6 +155,7 @@ fun printMultipleSignal(signal : String, number : Int) {
     }
 }
 
-// Challenge 2 : could not figure out the best solution
+// Challenge 2 : could not figure out the most efficient solution using list
+// maybe complete it with map
 
 
