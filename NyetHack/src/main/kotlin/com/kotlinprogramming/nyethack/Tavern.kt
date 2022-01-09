@@ -1,10 +1,11 @@
+package com.kotlinprogramming.nyethack
+
 import java.io.File
 import kotlin.math.max
-import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
 
-//val patronList: List<String> = listOf("Eli", "Mordoc", "Sophie")
+//val com.kotlinprogramming.nyethack.getPatronList: List<String> = listOf("Eli", "Mordoc", "Sophie")
 val patronList = mutableListOf("Eli", "Mordoc", "Sophie")
 // set
 val lastName = listOf("Ironfoot", "Fernsworth", "Baggins")
@@ -135,7 +136,7 @@ fun displayTavernMenu() {
         println()
     }
 
-    // print menuList
+    // print com.kotlinprogramming.nyethack.getMenuList
     menuList.forEach {
         it.apply {
             val (_, name, price) = this.split(",")
