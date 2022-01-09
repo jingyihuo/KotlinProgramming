@@ -1,4 +1,5 @@
 import java.io.File
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
@@ -7,36 +8,60 @@ var playerGold = 10
 var playerSilver = 10
 //val patronList: List<String> = listOf("Eli", "Mordoc", "Sophie")
 val patronList = mutableListOf("Eli", "Mordoc", "Sophie")
+// set
+val lastName = listOf("Ironfoot", "Fernsworth", "Baggins")
+val uniquePatrons = mutableSetOf<String>()
 // read file into a list
 val menuList = File("data/tavern-menu-data.txt").readText().split("\n")
 
 fun main() {
+
+    displayTavernMenu()
+
+    // checkPatrons()
+
+    // createUniquePatrons()
+
+    // printAllOrders()
+}
+
+private fun printAllOrders() {
+    // while loop
+    var orderCount = 0
+    while (orderCount <= 9) {
+        placeOrder(uniquePatrons.shuffled().first(), menuList.shuffled().first())
+        orderCount++
+    }
+}
+
+private fun createUniquePatrons() {
+    (0..9).forEach {
+        val first = patronList.shuffled().first()
+        val last = lastName.shuffled().first()
+        val name = "$first $last"
+        uniquePatrons += name
+    }
+    println(uniquePatrons)
+}
+
+private fun checkPatrons() {
     // list contains single item?
     if (patronList.contains("Eli")) {
         println("The tavern master says: Eli's in the back playing cards")
-    } else {
+    }
+    else {
         println("The tavern master says: Eli isn't here")
     }
 
     // list contains multiple items?
     if (patronList.containsAll(listOf("Sophie", "Mordoc"))) {
         println("The tavern master says: Yea, they're seated by the stew kettle.")
-    } else {
+    }
+    else {
         println("The tavern master says: Nay, they departed hours ago.")
     }
-
-    // println(menuList.size)
-
-    patronList.forEachIndexed { index, patron ->
-        println("Good evening, $patron, you're #${index + 1} inline")
-        val k = menuList.shuffled().first()
-        // println(k)
-        placeOrder(patron, k) }
-
-    menuList.forEachIndexed { index, data ->
-        println("#$index, $data")
-    }
 }
+
 
 fun placeOrder(patronName: String, menuData : String) {
     val indexOfApostrophe = TAVERN_NAME.indexOf('\'')
@@ -91,5 +116,45 @@ private fun performPurchase(price : Double) {
 private fun displayBalance() {
     println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
 }
+
+// Challenge 1
+fun displayTavernMenu() {
+    var maxLength = menuList.maxOf { it.length }
+    val banner = "Welcome to Taernyl's Folly"
+    maxLength = max(maxLength, banner.length)
+    println(maxLength)
+
+    val total = maxLength + 10
+
+    // print banner
+    banner.apply {
+        val number = (total - (this.length + 2)) / 2
+        printMultipleSignal("*", number)
+        print(" $this ")
+        printMultipleSignal("*", number)
+        println()
+    }
+
+    // print menuList
+    menuList.forEach {
+        it.apply {
+            val (_, name, price) = this.split(",")
+            val number = (total - (name.length + price.length + 2))
+            print("$name ")
+            printMultipleSignal(".", number)
+            print(" $price")
+            println()
+        }
+    }
+
+}
+
+fun printMultipleSignal(signal : String, number : Int) {
+    (0 until number).forEach { _ ->
+        print(signal)
+    }
+}
+
+// Challenge 2 : could not figure out the best solution
 
 
