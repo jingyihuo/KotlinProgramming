@@ -1,20 +1,16 @@
 package com.kotlinprogramming.nyethack
 
 fun main(args: Array<String>) {
-
-
-    val player = Player("Madrigal", 89, true, false)
+    // create an instance of Player
+    val player = Player("Madrigal")
     player.castFireball()
 
-    // Aura
-    val auraColor = player.auraColor()
+    var currentRoom : Room = TownSquare()
+    println(currentRoom.description())
+    println(currentRoom.load())
 
-    val healthStatus = player.formatHealthStatus()
-
-    printPlayerStatus(auraColor, player.name, healthStatus)
-
-//    val inebriationLevel = castFireBall(5)
-//    com.kotlinprogramming.nyethack.printInebriationStatus(inebriationLevel)
+    // player status
+    printPlayerStatus(player)
 }
 
 private fun printInebriationStatus(inebriationLevel: Int) {
@@ -28,13 +24,9 @@ private fun printInebriationStatus(inebriationLevel: Int) {
     println(inebirationStatus)
 }
 
-private fun printPlayerStatus(
-    auraColor: String,
-    name: String,
-    healthStatus: String
-) {
-    println(auraColor)
-    println("$name $healthStatus")
+private fun printPlayerStatus(player: Player) {
+    println("(Aura: ${player.auraColor()}) (isBlessed: ${if(player.isBlessed) "YES" else "NO"})")
+    println("${player.name} ${player.formatHealthStatus()}")
 }
 
 
