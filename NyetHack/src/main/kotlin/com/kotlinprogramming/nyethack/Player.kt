@@ -1,13 +1,36 @@
 package com.kotlinprogramming.nyethack
 
-class Player {
-    var name = "madrigal"
-        get() = field.capitalize()
+import java.io.File
+import java.util.*
+
+class Player(_name: String,
+             var healthPoints: Int,
+             val isBlessed: Boolean,
+             private val isImmortal: Boolean) {
+
+    var name = _name
+        get() = "${field.capitalize()} of $hometown"
         private set(value) { field = value.trim() }
 
-    var healthPoint = 89
-    val isBlessed = true
-    private val isImmortal = false
+    val hometown by lazy { selectHometown() }
+
+    private fun selectHometown() = File("data/towns.txt")
+            .readText()
+            .split("\n").shuffled().first()
+
+    init {
+        require(healthPoints > 0) { "Health points must be greater than zero" }
+        require(name.isNotBlank()) { "Player must have a name" }
+    }
+
+    // secondary constructor
+    constructor(name: String) : this(name,
+                                healthPoints = 100,
+                                isBlessed = true,
+                                isImmortal = false) {
+        // adding logic
+        if (name.lowercase(Locale.getDefault()) == "kar") healthPoints = 40
+    }
 
     // define class functions
     fun castFireball(numFireballs : Int = 2) {
@@ -15,7 +38,7 @@ class Player {
     }
 
     fun formatHealthStatus(): String {
-        val healthStatus = when (healthPoint) {
+        val healthStatus = when (healthPoints) {
             100 -> "is in excellent condition!"
             in 90..99 -> "has a few scratches."
             in 75..89 -> if (isBlessed) {
@@ -30,5 +53,5 @@ class Player {
     }
 
     fun auraColor(): String =
-            if (isBlessed && healthPoint >= 50 || isImmortal) "GREEN" else "NONE"
+            if (isBlessed && healthPoints >= 50 || isImmortal) "GREEN" else "NONE"
 }

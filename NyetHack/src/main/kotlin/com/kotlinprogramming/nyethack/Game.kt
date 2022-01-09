@@ -3,7 +3,7 @@ package com.kotlinprogramming.nyethack
 fun main(args: Array<String>) {
 
 
-    val player = Player()
+    val player = Player("Madrigal", 89, true, false)
     player.castFireball()
 
     // Aura
