@@ -1,34 +1,61 @@
+import java.io.File
 import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
 
 var playerGold = 10
 var playerSilver = 10
+//val patronList: List<String> = listOf("Eli", "Mordoc", "Sophie")
+val patronList = mutableListOf("Eli", "Mordoc", "Sophie")
+// read file into a list
+val menuList = File("data/tavern-menu-data.txt").readText().split("\n")
 
 fun main() {
-    // type of drink, drink name, price
-    placeOrder("shandy,Dragon's Breath,5.91") // no space between
+    // list contains single item?
+    if (patronList.contains("Eli")) {
+        println("The tavern master says: Eli's in the back playing cards")
+    } else {
+        println("The tavern master says: Eli isn't here")
+    }
 
-    // placeOrder("elixir,Shirley's Temple,4.12")
+    // list contains multiple items?
+    if (patronList.containsAll(listOf("Sophie", "Mordoc"))) {
+        println("The tavern master says: Yea, they're seated by the stew kettle.")
+    } else {
+        println("The tavern master says: Nay, they departed hours ago.")
+    }
+
+    // println(menuList.size)
+
+    patronList.forEachIndexed { index, patron ->
+        println("Good evening, $patron, you're #${index + 1} inline")
+        val k = menuList.shuffled().first()
+        // println(k)
+        placeOrder(patron, k) }
+
+    menuList.forEachIndexed { index, data ->
+        println("#$index, $data")
+    }
 }
 
-fun placeOrder(menuData : String) {
+fun placeOrder(patronName: String, menuData : String) {
     val indexOfApostrophe = TAVERN_NAME.indexOf('\'')
     val tavernMaster = TAVERN_NAME.substring(0 until indexOfApostrophe)
-    println("Madrigal speaks with $tavernMaster about their orders.")
+    println("$patronName speaks with $tavernMaster about their orders.")
 
     val (type, name, price) = menuData.split(',')
-    val message = "Madrigal buys a $name ($type) for $price"
+    val message = "$patronName buys a $name ($type) for $price"
     println(message)
 
     performPurchase(price.toDouble())
 
     val phrase = if (name == "Dragon's Breath") {
-        "Madrigal exclaims: ${toDragonSpeak("Ah, delicious $name")}!"
+        "$patronName exclaims: ${toDragonSpeak("Ah, delicious $name")}!"
     } else {
-        "Madrigal says : Thanks for th $name."
+        "$patronName says : Thanks for th $name."
     }
     println(phrase)
+    println()
 }
 
 private fun toDragonSpeak(phrase : String) : String =
