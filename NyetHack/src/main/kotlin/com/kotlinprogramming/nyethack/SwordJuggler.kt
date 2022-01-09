@@ -1,3 +1,5 @@
+package com.kotlinprogramming.nyethack
+
 import java.lang.Exception
 
 fun main() {
@@ -18,7 +20,7 @@ fun main() {
 }
 
 fun proficiencyCheck(swordsJuggling : Int?) {
-    checkNotNull(swordsJuggling) { "Player cannot juggle swords" }
+    checkNotNull(swordsJuggling) { "com.kotlinprogramming.nyethack.Player cannot juggle swords" }
 }
 
-class UnskilledSwordJugglerException () : IllegalStateException("Player cannot juggle swords")
+class UnskilledSwordJugglerException () : IllegalStateException("com.kotlinprogramming.nyethack.Player cannot juggle swords")
